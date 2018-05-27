@@ -1,0 +1,16 @@
+{
+	"name": "wavey-shaders",
+	"version": "1.0.0",
+	"main": "js/index.js",
+	"author": "Evan Lori Mahone",
+	"license": "GPL3",
+	"devDependencies": {
+		"eslint": "^4.19.1",
+		"eslint-config-xo": "^0.22.2"
+	},
+	"dependencies": {
+		"dat.gui": "^0.7.2",
+		"glslEditor": "https://github.com/patriciogonzalezvivo/glslEditor.git",
+		"three.js": "^0.77.1"
+	}
+}
