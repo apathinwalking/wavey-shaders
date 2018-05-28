@@ -144,8 +144,8 @@ float timeSig(float x, float vars[8]) {
 	float lower = vars[5];
 	float offBeatScale = vars[6];
 
-	float barLength = period * upper;
-	float beatLength = barLength / (lower  period);
+	float barLength = (period * (lower / 4.)) * upper;
+	float beatLength = period;
 	float barFrq = 1./ barLength;
 	float beatFrq = 1. / beatLength;
 	float barTime = mod(x,barLength);
@@ -188,32 +188,32 @@ float polyInOut(float x, float vars[8]) {
 }
 
 float alpha(float x, float vars[8]) {
-    return timeSig(x, vars);
+    return sine(x, vars);
 }
 
 float omega(float x, float vars[8]) {
-    return timeSig(x, vars);
+    return triangle(x, vars);
 }
 
 float delta(vec2 st) {
     float a_vars[8];
-    a_vars[0] = 1.0;  // Amplitude
+    a_vars[0] = .25;  // Amplitude
     a_vars[1] = 0.0; // phaseShift
-    a_vars[2] = .25; // period
+    a_vars[2] = 1.00; // period
     a_vars[3] = 0.0; // vshift
-    a_vars[4] = 2.0; // other1
+    a_vars[4] = 4.0; // other1
 	a_vars[5] = 4.0;
-	a_vars[6] = 0.5;
+	a_vars[6] = 0.25;
 	a_vars[7] = 0.0;
 
     float o_vars[8];
-    o_vars[0] = 1.0; // Amplitude
+    o_vars[0] = 1.0 - 4.*sine(timeSig(beat, a_vars), a_vars); // Amplitude
     o_vars[1] = 0.0; // phaseShift
-    o_vars[2] = .25; // period
-    o_vars[3] = 0.0; // vshift
-    o_vars[4] = 2.0; // other1
+    o_vars[2] = 1.00;  // period
+    o_vars[3] = .0; // vshift
+    o_vars[4] = 4.0; // other1
 	o_vars[5] = 4.0;
-	o_vars[6] = 0.5;
+	o_vars[6] = 0.25;
 	o_vars[7] = 0.0;
 
     float ax = alpha(st.x, a_vars);

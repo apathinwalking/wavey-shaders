@@ -1,16 +1,19 @@
 /* global THREE, dat */
 
+let config = {
+	maxW: {name: 'Max Width', val: 540, min: 100, max: 1080, step: 10},
+	maxH: {name: 'Max Height', val: 540, min: 100, max: 1080, step: 10},
+	bpm: {name: 'Beats/Minute', val: 60, min: 0, max: 300, step: 1},
+	motifH: {name: 'Pattern Height', val: 100, min: 0, max: 1080, step: 1},
+	bandH: {name: 'Band Height', val: 40, min: 0, max: 1080, step: 1},
+	aa: {name: 'Sample Level', val: 0, min: 0, max: 5, step: 1}
+};
+
 class WaveyShaders {
-	constructor(dat, three, {
-		maxW = {val: 540, min: 100, max: 1080, step: 10, name: 'Max Width'},
-		maxH = {val: 540, min: 100, max: 1080, step: 10, name: 'Max Height'},
-		bpm = {val: 60, min: 0, max: 300, step: 1, name: 'Beats/Minute'},
-		motifH = {val: 100, min: 0, max: 1080, step: 1, name: 'Pattern Height'},
-		bandH = {val: 40, min: 0, max: 1080, step: 1, name: 'Band Height'}
-	} = {}) {
+	constructor(dat, three, cfg = {}) {
 		this.dat = dat;
 		this.three = three;
-		this.cfg = {maxW, maxH, bpm, motifH, bandH};
+		this.cfg = Object.assign(config, cfg);
 		this.loadFragment().then(text => {
 			this.fragmentShader = text;
 			return this.loadVertex();
@@ -76,7 +79,16 @@ class WaveyShaders {
 
 		this.container.appendChild(this.renderer.domElement);
 
+		this.composer = new this.three.EffectComposer(this.renderer);
+		this.ssaaRenderPass = new this.three.SSAARenderPass(this.scene, this.camera);
+		this.ssaaRenderPass.unbiased = false;
+		this.composer.addPass(this.ssaaRenderPass);
+		this.copyPass = new this.three.ShaderPass(this.three.CopyShader);
+		this.copyPass.renderToScreen = true;
+		this.composer.addPass(this.copyPass);
+
 		this.windowResize();
+
 		window.addEventListener('resize', this.windowResize, false);
 
 		document.onmousemove = e => {
@@ -123,12 +135,27 @@ class WaveyShaders {
 			.onChange(() => {
 				this.uniforms.u_band_h.value = this.cfg.bandH.val; // eslint-disable-line
 			});
+
+		this.ctrl.bandH = this.gui.add(this.cfg.aa, 'val')
+			.min(this.cfg.aa.min)
+			.max(this.cfg.aa.max)
+			.step(this.cfg.aa.step)
+			.name(this.cfg.aa.name);
 	}
 
 	windowResize(/* event */) {
 		this.width = Math.min(window.innerWidth, this.cfg.maxW.val);
 		this.height = Math.min(window.innerHeight, this.cfg.maxH.val);
+
+		this.camera.aspect = this.width / this.height;
 		this.renderer.setSize(this.width, this.height);
+
+		this.pixelRatio = this.renderer.getPixelRatio();
+		this.composerWidth = Math.floor(this.width / this.pixelRatio) || 1;
+		this.composerHeight = Math.floor(this.width / this.pixelRatio) || 1;
+
+		this.composer.setSize(this.composerWidth, this.composerHeight);
+
 		this.uniforms.u_resolution.value.x = this.renderer.domElement.width;
 		this.uniforms.u_resolution.value.y = this.renderer.domElement.height;
 	}
@@ -147,7 +174,8 @@ class WaveyShaders {
 
 	render() {
 		this.uniforms.u_time.value += 0.05;
-		this.renderer.render(this.scene, this.camera);
+		this.ssaaRenderPass.sampleLevel = config.aa.val;
+		this.composer.render();
 	}
 }
 

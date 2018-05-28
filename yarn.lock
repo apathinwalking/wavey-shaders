@@ -1829,15 +1829,9 @@ text-table@~0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
 
-three.js@^0.77.1:
-  version "0.77.1"
-  resolved "https://registry.yarnpkg.com/three.js/-/three.js-0.77.1.tgz#07858a8749e4b627a31083252a2d987776cca32a"
-  dependencies:
-    three "0.77.0"
-
-three@0.77.0:
-  version "0.77.0"
-  resolved "https://registry.yarnpkg.com/three/-/three-0.77.0.tgz#8b0b1b00047689ceaa020d480a562ca60d87ff37"
+"three@https://github.com/mrdoob/three.js.git":
+  version "0.92.0"
+  resolved "https://github.com/mrdoob/three.js.git#a17dc8c8125aab75e25348d0aec5ab4551559b93"
 
 through@^2.3.6, through@~2.3.8:
   version "2.3.8"

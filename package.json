@@ -11,6 +11,6 @@
 	"dependencies": {
 		"dat.gui": "^0.7.2",
 		"glslEditor": "https://github.com/patriciogonzalezvivo/glslEditor.git",
-		"three.js": "^0.77.1"
+		"three": "https://github.com/mrdoob/three.js.git"
 	}
 }
