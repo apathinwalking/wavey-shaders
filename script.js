@@ -144,7 +144,7 @@ function initGUI() {
 
 	alphaF.open();
 	omegaF.open();
-	motif.open();
+	motifF.open();
 	
 	alphaF.add(uniforms.u_a_amplitude, "value").min(opt.alpha.amplitude.min).max(opt.alpha.amplitude.max).name(opt.alpha.amplitude.name);
 	alphaF.add(uniforms.u_a_pshift, "value").min(opt.alpha.pshift.min).max(opt.alpha.pshift.max).name(opt.alpha.pshift.name);
