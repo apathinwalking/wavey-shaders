@@ -59,10 +59,11 @@ uniform float u_o_polyIn;
 uniform float u_o_polyOut;
 uniform float u_o_polyInOut;
 
+uniform float u_p_cartesian;
+uniform float u_p_polar;
 uniform float u_p_pattern_height;
 uniform float u_p_band_height;
-
-float tempo = 15.;
+uniform float u_p_radial_sym;
 
 int pattern_n = int(ceil(u_resolution.y / u_p_pattern_height));
 vec2 pattern = vec2((u_p_pattern_height / u_resolution.y) * u_resolution.x, u_p_pattern_height);
@@ -73,18 +74,13 @@ vec2 pattern_st = pattern / u_resolution;
 vec2 band_st = band / u_resolution;
 vec2 gap_st = gap / u_resolution;
 
-float mv() {
-  float t = 60.0/tempo;
-  return u_time / t;
-}
-
 float rand(float x) {
-   return fract(sin(x)*100000.0);
+	return fract(sin(x)*100000.0);
 }
 
 float sine(float x, float vars[9]) {
-  float amp = vars[0];
-  float pshift = vars[1];
+	float amp = vars[0];
+	float pshift = vars[1];
 	float period = vars[2];
 	float vshift = vars[3];
 	float b = M_2PI / period;
@@ -278,12 +274,30 @@ float omega(float x) {
 	return o;
 }
 
-
-float delta(vec2 st) {
+float deltaCartesian(vec2 st) {
 	float ax = alpha(st.x);
 	float ox = omega(st.x);
 	float factor = st.y;
 	return ax + ((ox - ax) * factor);
+}
+
+float deltaPolar(vec2 st) {
+	vec2 pos = vec2(0.5)-st;
+	float r = length(pos)*2.0;
+	float a = atan(pos.y,pos.x);
+	
+	float ax = alpha(a*u_p_radial_sym);
+	float ox = omega(a*u_p_radial_sym);
+	float factor = st.y;
+	return ax + ((ox - ax) * factor);
+}
+
+
+float delta(vec2 st) {
+	float o = 0.;
+	o += deltaCartesian(st) * u_p_cartesian;
+	o += deltaPolar(st) * u_p_polar;
+	return o;
 }
 
 float eval(vec2 st) {

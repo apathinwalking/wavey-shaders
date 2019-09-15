@@ -187,8 +187,12 @@ float delta(vec2 st) {
     o_vars[3] = 0.5; // vshift
     o_vars[4] = 2.; // other1
 
-    float ax = alpha(st.x, a_vars);
-    float ox = omega(st.x, o_vars);
+	vec2 pos = vec2(0.5)-st;
+	float r = length(pos)*2.0;
+	float a = atan(pos.y,pos.x);
+    
+    float ax = alpha(a*big, a_vars);
+    float ox = omega(a*big, o_vars);
     float factor = st.y;
     return ax + ((ox - ax) * factor);
 }
