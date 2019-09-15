@@ -31,7 +31,8 @@ var opts = {
 		coordType: {val: "cartesian", name: "Coordinate System"},
 		patternHeight: {val: 50, min: 0, max: 400, step: 1, name: "pattern Height"},
 		bandHeight: {val: 25, min: 0, max: 400, step: 1, name: "Band Height"},
-		radialSymmetry: {val: 1, min: -10, max: 10, step: .1, name: "Radial Symmetry"}
+		radialSymmetry: {val: 1, min: -10, max: 10, step: .1, name: "Radial Symmetry"},
+		smoothstep: {val: 0, min: 0, max: .1, step: .001, name: "Smoothstep"}
 	},
 	renderer: {
 		antialias: true
@@ -85,9 +86,19 @@ function run() {
 }
 
 function loadFragment() {
+	var shaderLoc;
+	var re = /file:/
+	var href = location.href;
+	var isLocal = re.test(href);
+	if (isLocal) {
+		shaderLoc = 'shaders/shader.frag';
+	} else {
+		shaderLoc = 'https://raw.githubusercontent.com/evanlorim/wavy-shaders/master/shaders/shader.frag'
+	}
+
 	return new Promise(resolve => {
 		let request = new XMLHttpRequest();
-		request.open('GET', 'shaders/shader.frag', true);
+		request.open('GET', shaderLoc, true);
 		request.addEventListener('load', () => {
 			resolve(request.responseText);
 		});
@@ -96,9 +107,19 @@ function loadFragment() {
 }
 
 function loadVertex() {
+	var shaderLoc;
+	var re = /file:/
+	var href = location.href;
+	var isLocal = re.test(href);
+	if (isLocal) {
+		shaderLoc = 'shaders/vertex.vertex';
+	} else {
+		shaderLoc = 'https://raw.githubusercontent.com/evanlorim/wavy-shaders/master/shaders/vertex.vertex'
+	}
+
 	return new Promise(resolve => {
 		var request = new XMLHttpRequest();
-		request.open('GET', 'shaders/vertex.vertex', true);
+		request.open('GET', shaderLoc, true);
 		request.addEventListener('load', () => {
 			resolve(request.responseText);
 		});
@@ -132,6 +153,7 @@ function initUniforms() {
 		u_p_pattern_height: {type: "f", value: opts.pattern.patternHeight.val},
 		u_p_band_height: {type: "f", value: opts.pattern.bandHeight.val},
 		u_p_radial_sym: {type: "f", value: opts.pattern.radialSymmetry.val},
+		u_p_smoothstep: {type: "f", value: opts.pattern.smoothstep.val}
 	};
 
 	waveTypes.forEach(w => {
@@ -232,6 +254,8 @@ function initGUI() {
 	patternF.add(uniforms.u_p_pattern_height, "value").min(opts.pattern.patternHeight.min).max(opts.pattern.patternHeight.max).step(opts.pattern.patternHeight.step).name(opts.pattern.patternHeight.name);
 	patternF.add(uniforms.u_p_band_height, "value").min(opts.pattern.bandHeight.min).max(opts.pattern.bandHeight.max).step(opts.pattern.bandHeight.step).name(opts.pattern.bandHeight.name);
 	patternF.add(uniforms.u_p_radial_sym, "value").min(opts.pattern.radialSymmetry.min).max(opts.pattern.radialSymmetry.max).step(opts.pattern.radialSymmetry.step).name(opts.pattern.radialSymmetry.name);
+	patternF.add(uniforms.u_p_smoothstep, "value").min(opts.pattern.smoothstep.min).max(opts.pattern.smoothstep.max).step(opts.pattern.smoothstep.step).name(opts.pattern.smoothstep.name);
+
 
 	canvasF.add(uniforms.u_resolution.value, "x").min(opts.canvas.width.min).max(opts.canvas.width.max).name(opts.canvas.width.name).onChange(val => {
 		renderer.setSize(val, renderer.getSize().y);

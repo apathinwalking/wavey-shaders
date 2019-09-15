@@ -64,6 +64,7 @@ uniform float u_p_polar;
 uniform float u_p_pattern_height;
 uniform float u_p_band_height;
 uniform float u_p_radial_sym;
+uniform float u_p_smoothstep;
 
 int pattern_n = int(ceil(u_resolution.y / u_p_pattern_height));
 vec2 pattern = vec2((u_p_pattern_height / u_resolution.y) * u_resolution.x, u_p_pattern_height);
@@ -303,7 +304,7 @@ float delta(vec2 st) {
 float eval(vec2 st) {
 	float fx = delta(st);
 	float dist = mod((st.y - fx), pattern_st.y);
-	return step(dist,band_st.y);
+	return smoothstep(dist, dist-u_p_smoothstep, band_st.y);
 }
 
 void main() {
