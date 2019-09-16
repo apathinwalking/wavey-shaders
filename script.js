@@ -11,7 +11,6 @@ var opts = {
 		ratio: {val: .5, min: 0, max: 1, step: .05, name: "Pulse Ratio"},
 		decay: {val: 4, min: 0, max: 10, step: .1, name: "Damp Decay"},
 		exponent: {val: 3, min: 0, max:6, step: .1, name: "Exponent"},
-		plusx: {val: 0, min: -8, max: 8, step: .1, name: "Plus X"},
 
 		type: {val: "sine", name: "Wave Type"}
 	},
@@ -23,15 +22,13 @@ var opts = {
 		ratio: {val: .5, min: 0, max: 1, step: .05, name: "Pulse Ratio"},
 		decay: {val: 4, min: 0, max: 10, step: .1, name: "Damp Decay"},
 		exponent: {val: 3, min: 0, max:6, step: .1, name: "Exponent"},
-		plusx: {val: 0, min: -8, max: 8, step: .1, name: "Plus X"},
-
+		
 		type: {val: "sine", name: "Wave Type"}
 	},
 	pattern: {
 		coordType: {val: "cartesian", name: "Coordinate System"},
 		patternHeight: {val: 50, min: 0, max: 400, step: 1, name: "pattern Height"},
 		bandHeight: {val: 25, min: 0, max: 400, step: 1, name: "Band Height"},
-		radialSymmetry: {val: 1, min: -10, max: 10, step: .1, name: "Radial Symmetry"},
 		smoothstep: {val: 0, min: 0, max: .1, step: .001, name: "Smoothstep"}
 	},
 	renderer: {
@@ -139,7 +136,6 @@ function initUniforms() {
 		u_a_ratio: {type: "f", value: opts.alpha.ratio.val},
 		u_a_decay: {type: "f", value: opts.alpha.decay.val},
 		u_a_exponent: {type: "f", value: opts.alpha.exponent.val},
-		u_a_plusx: {type:"f", value: opts.alpha.plusx.val},
 
 		u_o_amplitude: { type: "f", value: opts.omega.amplitude.val },
 		u_o_pshift: { type: "f", value: opts.omega.pshift.val },
@@ -148,11 +144,9 @@ function initUniforms() {
 		u_o_ratio: {type: "f", value: opts.omega.ratio.val},
 		u_o_decay: {type: "f", value: opts.omega.decay.val},
 		u_o_exponent: {type: "f", value: opts.omega.exponent.val},
-		u_o_plusx: {type:"f", value: opts.omega.plusx.val},
 
 		u_p_pattern_height: {type: "f", value: opts.pattern.patternHeight.val},
 		u_p_band_height: {type: "f", value: opts.pattern.bandHeight.val},
-		u_p_radial_sym: {type: "f", value: opts.pattern.radialSymmetry.val},
 		u_p_smoothstep: {type: "f", value: opts.pattern.smoothstep.val}
 	};
 
@@ -219,7 +213,6 @@ function initGUI() {
 	alphaF.add(uniforms.u_a_ratio, "value").min(opts.alpha.ratio.min).max(opts.alpha.ratio.max).step(opts.alpha.ratio.step).name(opts.alpha.ratio.name);
 	alphaF.add(uniforms.u_a_decay, "value").min(opts.alpha.decay.min).max(opts.alpha.decay.max).step(opts.alpha.decay.step).name(opts.alpha.decay.name);
 	alphaF.add(uniforms.u_a_exponent, "value").min(opts.alpha.exponent.min).max(opts.alpha.exponent.max).step(opts.alpha.exponent.step).name(opts.alpha.exponent.name);
-	alphaF.add(uniforms.u_a_plusx, "value").min(opts.alpha.plusx.min).max(opts.alpha.plusx.max).step(opts.alpha.plusx.step).name(opts.alpha.plusx.name);
 	alphaF.add(vars, "alphaType", waveTypes).name(opts.alpha.type.name).onChange(val => {
 		waveTypes.forEach(w => {
 			var aVal = (val === w) ? 1 : 0;
@@ -235,7 +228,6 @@ function initGUI() {
 	omegaF.add(uniforms.u_o_ratio, "value").min(opts.omega.ratio.min).max(opts.omega.ratio.max).step(opts.omega.ratio.step).name(opts.omega.ratio.name);
 	omegaF.add(uniforms.u_o_decay, "value").min(opts.omega.decay.min).max(opts.omega.decay.max).step(opts.omega.decay.step).name(opts.omega.decay.name);
 	omegaF.add(uniforms.u_o_exponent, "value").min(opts.omega.exponent.min).max(opts.omega.exponent.max).step(opts.omega.exponent.step).name(opts.omega.exponent.name);
-	omegaF.add(uniforms.u_o_plusx, "value").min(opts.omega.plusx.min).max(opts.omega.plusx.max).step(opts.omega.plusx.step).name(opts.omega.plusx.name);
 	omegaF.add(vars, "omegaType", waveTypes).name(opts.omega.type.name).onChange(val => {
 		waveTypes.forEach(w => {
 			var oVal = (val === w) ? 1 : 0;
@@ -253,7 +245,6 @@ function initGUI() {
 	});
 	patternF.add(uniforms.u_p_pattern_height, "value").min(opts.pattern.patternHeight.min).max(opts.pattern.patternHeight.max).step(opts.pattern.patternHeight.step).name(opts.pattern.patternHeight.name);
 	patternF.add(uniforms.u_p_band_height, "value").min(opts.pattern.bandHeight.min).max(opts.pattern.bandHeight.max).step(opts.pattern.bandHeight.step).name(opts.pattern.bandHeight.name);
-	patternF.add(uniforms.u_p_radial_sym, "value").min(opts.pattern.radialSymmetry.min).max(opts.pattern.radialSymmetry.max).step(opts.pattern.radialSymmetry.step).name(opts.pattern.radialSymmetry.name);
 	patternF.add(uniforms.u_p_smoothstep, "value").min(opts.pattern.smoothstep.min).max(opts.pattern.smoothstep.max).step(opts.pattern.smoothstep.step).name(opts.pattern.smoothstep.name);
 
 

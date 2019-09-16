@@ -1,2 +1,2 @@
-# Wave Art Interpolation Device 4
+# Wave Art Visualization Engine 4
 GLSL shader art that I made.
